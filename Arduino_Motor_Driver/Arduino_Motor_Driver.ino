@@ -1,7 +1,7 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>  // add the FreeRTOS functions for Semaphores (or Flags).
 #include <stdlib.h>
-
+#include "AVR_PWM.h"
 /*
 Currently this code does not do active breaking of the motor but it can drive the speed forwards and backwards.
 Pin 3 controls the speed and should be connected to the enable pin of the L293D
@@ -25,10 +25,10 @@ enum Direction{
 
 uint8_t MotorValue = 0;
 uint8_t MotorDirection = Forwards;
-uint8_t *MotorValuePointer =   &MotorValue;
 SemaphoreHandle_t MotorMutex;
 
-
+#define motorPWM_pin 9
+AVR_PWM* PWM_Instance;
 
 void setup() {
   // put your setup code here, to run once:
@@ -36,6 +36,8 @@ void setup() {
     while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB, on LEONARDO, MICRO, YUN, and other 32u4 based boards.
   }
+  
+  PWM_Instance = new AVR_PWM(motorPWM_pin, 20000.0, 0);
 
   MotorMutex = xSemaphoreCreateMutex();
 
@@ -122,8 +124,9 @@ void TaskWriteMotors( void *pvParameters __attribute__((unused)) )  // This is a
 
   for (;;){ 
     if ( xSemaphoreTake( MotorMutex, ( TickType_t ) 5 ) == pdTRUE ){
-
-      analogWrite(MotorPin,MotorValue); //Write the motor speed
+      float dutycycle = MotorValue * 100.0f / 255.0f; 
+      PWM_Instance->setPWM(motorPWM_pin, 20000.0, dutycycle);
+      //analogWrite(MotorPin,MotorValue); //Write the motor speed
 
       if(MotorDirection == Forwards){ //Write the motor direction
         digitalWrite(Input2Pin,LOW);
@@ -158,3 +161,4 @@ void TaskConsoleWrite( void *pvParameters __attribute__((unused)) )  // This is 
   }
   
 }
+
