@@ -1,0 +1,15 @@
+Requirements for Arduino Uno Code
+
+The Arduino shall drive the H bridge motor driver by using a PWM signal at 20kHz on pin D8
+The Arduino shall drive the H bridge motor driver at 0% power for 1 second, 50% power for 1 second and 100% power for 1 second before stepping down 50% for 1 second, then repeating forever
+The Arduino shall measure the shunt voltage on pin A0 and transform the measurement to current on A0 by comparing the voltage to a current voltage curve defined by offset and slope. 
+The Arduino shall measure the voltage on pin A1 (The pin with the optical motor encoder) at the same frequency as the current
+The Arduino shall measure the voltage on A1 Voltage(Shunt current measurement) of A0, and the commanded power at the same frequency, and as fast as possible.
+The Arduino shall connect serially to an external computer at a baud rate 500000 or greater
+A measurement group is defined as the measured voltage current power and delta time for one time step.
+The Arduino shall communicate the measured voltage, current, power, and delta time as chars/bytes with an identifier for each new measurement group in order to transmit as fast as possible.
+ 
+Requirements of python script (the computer receiving serial communication)
+The program shall query the user for which serial connection to use
+The program shall properly receive and record measurement groups from the Arduino
+When the user inputs 'esc' the program shall stop recording data and save the data into a csv file of name "Arduino motor data" and append the current time and number of datapoints to the name
