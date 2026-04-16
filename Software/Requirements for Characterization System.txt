@@ -1,15 +1,43 @@
+These are the requirements for a system to characterize a motor for a torque controller. The system uses an optical tachometer and a shunt resistor current sensor managed by an Arduino Uno. The Arduino Uno will run code to make rapid measurements and send the measurements serially to a computer running a python program which saves the data and calculated motor characteristics. Nicholas Navarrete
+
+###############################################################################
+
 Requirements for Arduino Uno Code
 
 The Arduino shall drive the H bridge motor driver by using a PWM signal at 20kHz on pin D8
-The Arduino shall drive the H bridge motor driver at 0% power for 1 second, 50% power for 1 second and 100% power for 1 second before stepping down 50% for 1 second, then repeating forever
-The Arduino shall measure the shunt voltage on pin A0 and transform the measurement to current on A0 by comparing the voltage to a current voltage curve defined by offset and slope. 
-The Arduino shall measure the voltage on pin A1 (The pin with the optical motor encoder) at the same frequency as the current
-The Arduino shall measure the voltage on A1 Voltage(Shunt current measurement) of A0, and the commanded power at the same frequency, and as fast as possible.
-The Arduino shall connect serially to an external computer at a baud rate 500000 or greater
-A measurement group is defined as the measured voltage current power and delta time for one time step.
-The Arduino shall communicate the measured voltage, current, power, and delta time as chars/bytes with an identifier for each new measurement group in order to transmit as fast as possible.
+
+The Arduino shall use a duty cycle of 100% for 5 seconds then 0% for 5 seconds and repeat infinitely to drive the motor in a square wave manner.
+
+The Arduino shall measure the shunt voltage on pin A0 (The shunt current measurement).
+
+The Arduino shall measure the voltage on pin A1 (The pin with the optical motor encoder).
+
+The Arduino shall measure the voltage on A1, The Shunt current measurement of A0 (Voltage), and the commanded power at the same frequency.
+
+The Arduino shall connect serially to an external computer at a baud rate 500000. (This computer will run the python program to characterize the motor)
+
+A measurement group is defined as the measured voltage on pin A0, meaured voltage on pin A1, commanded power in %, and delta time for one time step.
+
+The Arduino shall communicate one measurement ground as chars/bytes with an identifier for each new measurement group in order to transmit as fast as possible.
+
+The Arduino shall be designed to send measurements as fast as possible
+
+###############################################################################
  
 Requirements of python script (the computer receiving serial communication)
+
+The program shall query the user for the offset and slope to calibrate the shunt resistor current sensor (slope in units of AnalogRead/Amps, and offset in units of AnalogRead)
+
+The program shall query the user for the moment of inertia of the rotor.
+
 The program shall query the user for which serial connection to use
+
 The program shall properly receive and record measurement groups from the Arduino
-When the user inputs 'esc' the program shall stop recording data and save the data into a csv file of name "Arduino motor data" and append the current time and number of datapoints to the name
+
+When the user inputs the escape key the program shall stop recording data and save the data into a csv file of name "Arduino motor data" and append the current time and number of datapoints to the name. The program will also enter a calculation phase.
+
+Once the python script is in the calculation phase it shall computes RPM from rising edge detection using a local adaptive threshold on the voltage measured on pin A0 of the arduino.
+
+Once the python script is in the calculation phase it shall use the data captured, and the known constants to estimate the coefficient of torque and the coefficient of friction of the motor.
+
+Once the coefficient of torque and the coefficient of friction are calculated, the program shall output the calulated values to the user and save the vaues in a text file of name "Arduino motor characteristics" and append the current time and number of datapoints to the name.

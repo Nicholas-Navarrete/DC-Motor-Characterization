@@ -7,10 +7,11 @@ float analogTimeAverageA0();
 float readFloatFromSerial();
 /*
 This program does linear fitting for the current sensing circuit. It has a precision of approximately 1mA, but this may be bettered with better calibrated power supplies.
-The coefficient
+This is for the INA180A3IDBVR with 0.05 ohm shunt
 */
 
 void setup() {
+  pinMode(A0, INPUT);
   Serial.begin(115200);
   Serial.println("Set the current to 0A, send Y when complete:");
   while (Serial.read() != 'Y'){}

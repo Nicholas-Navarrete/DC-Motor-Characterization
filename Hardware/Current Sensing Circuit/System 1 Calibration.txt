@@ -1,0 +1,2 @@
+Amps offset (AnalogRead value) = 2.00
+AnalogRead/Amps = 1100.20
