@@ -4,7 +4,7 @@
 #include "AVR_PWM.h"
 /*
 Currently this code does not do active breaking of the motor but it can drive the speed forwards and backwards.
-Pin 3 controls the speed and should be connected to the enable pin of the L293D
+Pin 9 controls the speed and should be connected to the enable pin of the L293D
 Pins 7 and 8 control the direction and should be connected to Diver inputs 1 and 2 of the L293D respectively
 */
 

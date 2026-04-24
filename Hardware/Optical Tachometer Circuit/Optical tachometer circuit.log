@@ -1,21 +1,21 @@
-Circuit: * C:\Users\stern\Documents\Projects\DC-Motor-Characterization\Optical tachometer circuit.asc
+Circuit: * C:\Users\stern\Documents\Projects\DC-Motor-Characterization\Hardware\Optical Tachometer Circuit\Optical tachometer circuit.asc
 
 Direct Newton iteration for .op point succeeded.
 
-Date: Mon Mar 23 22:35:01 2026
-Total elapsed time: 0.179 seconds.
+Date: Mon Apr 20 23:06:06 2026
+Total elapsed time: 0.193 seconds.
 
 tnom = 27
 temp = 27
 method = modified trap
-totiter = 3786
-traniter = 3782
-tranpoints = 1892
-accept = 1409
-rejected = 483
+totiter = 3760
+traniter = 3756
+tranpoints = 1879
+accept = 1402
+rejected = 477
 matrix size = 12
 fillins = 7
 solver = Normal
 Matrix Compiler1: 778 bytes object code size  0.1/0.1/[0.1]
-Matrix Compiler2: off  [0.1]/0.6/0.1
+Matrix Compiler2: 1.13 KB object code size  0.1/0.1/[0.1]
 

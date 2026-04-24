@@ -4,7 +4,7 @@ These are the requirements for a system to characterize a motor for a torque con
 
 Requirements for Arduino Uno Code
 
-The Arduino shall drive the H bridge motor driver by using a PWM signal at 20kHz on pin D8
+The Arduino shall drive the H bridge motor driver by using a PWM signal at 20kHz on pin D3 using "AVR_PWM.h"
 
 The Arduino shall use a duty cycle of 100% for 5 seconds then 0% for 5 seconds and repeat infinitely to drive the motor in a square wave manner.
 
