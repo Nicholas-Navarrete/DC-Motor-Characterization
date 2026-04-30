@@ -443,8 +443,8 @@ def main():
 
     # -- Build file names ------------------------------------------------------
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    csv_path  = f"Arduino motor data_{timestamp}_{n}pts.csv"
-    txt_path  = f"Arduino motor characteristics_{timestamp}_{n}pts.txt"
+    csv_path  = f"Data\Arduino motor data_{timestamp}_{n}pts.csv"
+    txt_path  = f"Data\Arduino motor characteristics_{timestamp}_{n}pts.txt"
 
     # -- Save raw CSV ----------------------------------------------------------
     save_csv(records, times, currents, enc_voltages, csv_path)

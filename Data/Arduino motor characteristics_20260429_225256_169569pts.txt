@@ -1,0 +1,12 @@
+========================================
+ Arduino Motor Characterization Results
+========================================
+  Timestamp  : 2026-04-29 22:53:02
+  Samples    : 169,569
+  J (rotor)  : 4.872160e-05  kg m^2
+
+  Kt (torque constant)   = 0.002272  N m / A
+  B  (viscous friction)  = 2.981147e-06  N m s / rad
+
+  Note: Kt ~= Ke (back-EMF constant) in SI units.
+========================================
