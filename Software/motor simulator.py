@@ -17,7 +17,12 @@ Kt = TorqueConstant
 R = electricResistance
 L = electricInductance
 
+##
+Vcc = 16.0 #V
+Current_limit=0.6 #A
+
 # Defining the SS system
+# state = [theta*;i]
 A = np.array([[-b/J,Kt/J],[-Kt/L,-R/L]])
 B = np.array([[0],[1/L]])
 C = np.array([[1,0]])
@@ -48,33 +53,41 @@ dt        = 1.0 / f_control # s
 t_end    = 20.0             # s
 t_cl     = np.arange(0, t_end, dt)
 N        = len(t_cl)
- 
+
 # Pre-allocate storage
 x_cl = np.zeros((N, 2))    # states  [omega, i]
 u_cl = np.zeros(N)          # control input (voltage)
  
 x_cl[0] = np.array([0,0])
 
-Torque_Setpoint = 0.001136 #N/m
+Torque_Setpoint = 0.0005 #N/m
 Setpoint = np.array([0,Torque_Setpoint/Kt])
- 
-# Discrete-time integration using forward Euler
-for k in range(N - 1):
-    x_k  = x_cl[k]
+
+## Simulation
+for k in range(N-1):
+    x_k = x_cl[k]
     u_k  = float(-K @ (x_k - Setpoint))          # state feedback: u = -K*x
+
+    # Input voltage saturation
+    u_k  = float(np.clip(u_k, -Vcc, Vcc))
+
     u_cl[k] = u_k
-    
-    # ẋ = A*x + B*u  →  x[k+1] = x[k] + dt * (A*x[k] + B*u[k])
-    x_dot     = A @ x_k + B.flatten() * u_k
-    x_cl[k+1] = x_k + dt * x_dot
+    _, _, xout = lsim(sys, [u_k, u_k], [0.0, dt], X0=x_k)
+
+    x_next = xout[-1].copy()# take only the final state
+
+    # current limit 
+    x_next[1] = float(np.clip(x_next[1], -Current_limit, Current_limit))
+
+    x_cl[k+1] = x_next
  
-u_cl[-1] = float(-K @ x_cl[-1])
- 
+u_cl[-1] = float(-K @ (x_cl[-1] - Setpoint))
+
 omega_cl = x_cl[:, 0]   # angular velocity output
 current_cl = x_cl[:,1]  # current output
 torque_cl = x_cl[:,1]*Kt   # torque velocity output
  
-# ── Plots ────────────────────────────────────────────────────────────────────
+# ── Plots ───────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(2, 1, figsize=(10, 10))
 fig.suptitle("DC Motor Simulation", fontsize=14)
  
